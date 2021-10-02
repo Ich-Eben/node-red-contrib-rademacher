@@ -1,0 +1,36 @@
+{
+	"name": "node-red-contrib-rademacher",
+	"version": "1.0.0",
+	"description": "Provides nodes to talk to Rademacher roller shutters",
+	"license": "MIT",
+	"dependencies": {
+		"crypto-js": "^4.1.1",
+		"request": "^2.88.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+	"bugs": {
+		"url": ""
+	},
+	"homepage": "",
+	"keywords": [
+		"node-red",
+		"rademacher",
+		"start2smart",
+		"bridge",
+		"rollershutter",
+		"rollotron",
+		"home automation"
+	],
+	"node-red": {
+		"nodes": {
+			"rademacher-bridge": "rademacher-bridge.js",
+			"rademacher-rollershutter": "rademacher-rollershutter.js"
+		}
+	},
+	"author": {
+		"name": "IchEben"
+	}
+}

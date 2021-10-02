@@ -1,0 +1,129 @@
+<script type="text/x-red" data-template-name="rademacher-rollershutter">
+	<div class="form-row">
+        <label for="node-input-server"><i class="fa fa-globe"></i> <span data-i18n="rademacher-rollershutter.label.server"></span></label>
+        <input type="text" id="node-input-server">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> <span data-i18n="rademacher-rollershutter.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]rademacher-rollershutter.placeholder.name">
+    </div>
+	<div class="form-row">
+        <label for="node-input-device"><i class="fa fa-toolbox"></i> <span data-i18n="rademacher-rollershutter.label.device"></span></label>
+        <div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-input-device" placeholder="1" style="width: 100%"/>
+            </div>
+            <a id="node-config-input-scan-devices" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="rademacher-rollershutter">
+    <p>Controls a rademacher roller shutter</p>
+	
+	<h3>Inputs</h3>
+	<dl class="message-properties">
+        <dt>payload
+            <span class="property-type">string | integer | object</span>
+        </dt>
+        <dd> <code>up</code> - move to upper position </dd>
+		<dd> <code>down</code> - move to lower position </dd>
+		<dd> <code>stop</code> - stops the movement </dd>
+		<dd> <code>stepup</code> - move up a by small amount </dd>
+		<dd> <code>stepdown</code> - move down a by small amount </dd>
+		<dd> <code>0 - 100</code> The position the roller shutter will move to </dd>
+		<dd> <code>{"name":"POS_DOWN_CMD"}</code> You can also pass an object. This will be directly send to the api </dd>
+    </dl>
+	
+	<h3>Outputs</h3>
+	<ol class="node-ports">
+		<dl class="message-properties">
+			<dt>payload <span class="property-type">integer</span></dt>
+			<dd>The actual position of the roller shutter</dd>
+			<dt>completeData <span class="property-type">object</span></dt>
+			<dd>The complete data object containing all information received from the api</dd>
+		</dl>
+	</ol>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('rademacher-rollershutter',{
+        category: 'Rademacher',
+        color: '#0077B0',
+        defaults: {
+			server: {
+				required: true, 
+				type: "rademacher-bridge"
+			},
+            name: {value:""},
+			device: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "rollerShutter.png",
+        label: function() {
+            return this.name||"rademacher-rollershutter";
+        },
+		oneditprepare: function() {
+            var scope = this;
+
+            function manualDeviceID() {
+                var current = $('#node-input-sceneid').val();
+                $('#node-input-device').replaceWith('<input type="text" id="node-input-device" style="width: 100%"/>');
+                $('#node-input-device').val(current);
+            }
+
+            function searchAndSelectDevices() {
+                var current = $('#node-input-device').val();
+                $('#node-input-device').replaceWith('<select id="node-input-device" style="width: 100%"></select>');
+                $('#node-input-device').append('<option selected="selected" value="null">'+scope._("rademacher-rollershutter.label.searching")+'</option>');
+				
+				var configNodeId = $('#node-input-server option:selected').val()
+                var configServer = RED.nodes.node(configNodeId);
+				
+				//GET request! We need to request the device list from the connection node via http!
+                $.get('rademacher/devices', {configNodeId: encodeURIComponent(configNodeId), host: encodeURIComponent(configServer?.host), password: encodeURIComponent(configServer?.credentials?.password)})
+                .done(function(data) {
+                    var devices = JSON.parse(data);
+
+                    if(devices.length <= 0) {
+                        RED.notify(scope._("rademacher-rollershutter.label.nothingFound"), "error");
+                    }
+
+                    // RESET OPTIONS
+                    $('#node-input-device').empty();
+
+                    // SET DEVICES AS OPTIONS
+                    devices.forEach(function(device) {
+                        $('#node-input-device').append('<option value="' + device.id + '">' + device.name + '</option>');
+                    });
+
+                    // SELECT CURRENT VALUE
+                    $('#node-input-device').val(current);
+                })
+                .fail(function() {
+                    RED.notify(scope._("rademacher-rollershutter.label.error"), "error");
+                });
+            }
+
+            $(document).on('change', '#node-input-device', function() {
+                var deviceName = $('#node-input-device option:selected').text();
+                if(deviceName.length > 0)
+                {
+                    $('#node-input-name').val(deviceName);
+                }
+            });
+
+            //Search
+            $('#node-config-input-scan-devices').click(function() {
+                if($('#node-input-device').prop("tagName") === "INPUT") {
+                    searchAndSelectDevices();
+                } else {
+                    manualDeviceID();
+                }
+            });
+        }
+    });
+</script>

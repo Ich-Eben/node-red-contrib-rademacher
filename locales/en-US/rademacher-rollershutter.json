@@ -1,0 +1,20 @@
+{
+	"rademacher-rollershutter": {
+		"label": {
+			"name": "Name",
+			"server": "Server",
+			"device": "Device",
+			"topic": "topic",
+			"nothingFound": "Nothing found",
+			"error": "Error",
+			"searching": "Searching..."
+		},
+		"placeholder": {
+			"name": "",
+			"host": "Host",
+			"password": "Password",
+			"server": "",
+			"topic": "enter a topic"
+		}
+	}
+}

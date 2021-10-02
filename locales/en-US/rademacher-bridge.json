@@ -1,0 +1,14 @@
+{
+	"rademacher-bridge": {
+		"label": {
+			"host": "Host",
+			"password": "Password",
+			"interval" : "Interval [s]"
+		},
+		"placeholder": {
+			"host": "e.g.: 192.168.178.75",
+			"password": "password",
+			"interval": "e.g.: 10"
+		}
+	}
+}

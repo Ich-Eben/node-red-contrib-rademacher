@@ -1,0 +1,57 @@
+<script type="text/x-red" data-template-name="rademacher-bridge">
+    <div class="form-row">
+        <label for="node-config-input-host"><i class="fa fa-globe"></i> <span data-i18n="rademacher-bridge.label.host"></span></label>
+        <input type="text" id="node-config-input-host" data-i18n="[placeholder]rademacher-bridge.placeholder.host">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-password"><i class="fa fa-sign-in"></i> <span data-i18n="rademacher-bridge.label.password"></span></label>
+        <input type="password" id="node-config-input-password" data-i18n="[placeholder]rademacher-bridge.placeholder.password">
+    </div> 
+    <div class="form-row">
+        <label for="node-config-input-interval"><i class="fa fa-times-circle"></i> <span data-i18n="rademacher-bridge.label.interval"></span></label>
+        <input type="number" id="node-config-input-interval" data-i18n="[placeholder]rademacher-bridge.placeholder.interval">
+    </div> 
+</script>
+
+<script type="text/x-red" data-help-name="rademacher-bridge">
+    <p>Configurations for the rademacher bridge</p>
+	
+	<h3>Host</h3>
+	<dd> The IP-address of the rademacher bridge </dd>
+	<h3>Password</h3>
+	<dd> The password for the rademacher bridge login </dd>
+	<h3>Interval</h3>
+	<dd> The polling interval for device status updates </dd>
+</script>
+
+<script type="text/javascript">
+    function checkIP(val,len=6) {
+      part=val.split(".");
+      var ok=(part.length==len);
+      for (var i = 0; (i < part.length) && ok; i++) {
+        ok = ok && ((parseInt(part[i])==part[i]) && part[i]>=0 && part[i]<=255)
+      }
+      return ok;
+    }
+    RED.nodes.registerType('rademacher-bridge', {
+        category: 'config',
+        defaults: {
+            host: {
+                value: '',
+                required: true,
+                validate: function(val){ return checkIP(val,4); }
+            },
+            interval: {
+                value: 10,
+                required: true,  
+                validate: RED.validators.number()
+            }
+        },
+		credentials: {
+			password: {type:"password"}
+		},
+        label: function() {
+            return this.host;
+        }
+    });
+</script>
