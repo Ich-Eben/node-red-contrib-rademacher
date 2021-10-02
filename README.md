@@ -1,13 +1,17 @@
-# node-red-contrib-anel
+# node-red-contrib-rademacher
 
-> A Node-RED implementation for the Anel Power Control LAN-Outlets.
-> (Anel provided by ANEL-Elektronik AG &copy;. I'm not affiliated.)
+> A Node-RED implementation for the Rademacher start2smart bridge.
+> (Rademacher provided by RADEMACHER GERÄTE-ELEKTRONIK GmbH &copy;. I'm not affiliated.)
 
 
 
-## issue
+## Issue
 
-If you have problems do not be afraid to open an issue.
+If you have problems do not be afraid to create an issue.
+
+## Pull requests
+
+Also feel free to create pull requests!
 
 
 ## Installation
@@ -17,43 +21,34 @@ cd ~/.node-red
 npm install <location of node module>
 ```
 
-## Requirements
-* Firmware 4.5
-
 ## Configuration
 
-Set the IP-Address, username and password of your Anel.
+Set the IP-Address and password of your start2smart bridge.
 
 
 ## Nodes added by this package
 
-#### - anel-connection
+#### - rademacher-bridge
 
-A node that represents a Anel device.
-Be sure to create one for an outlet.
+The configuration node for the bridge.
 
 ```
-Host: IP address of the Anel outlet
-Port: Normally 80
-Username: Normally user7
-Password: Normally anel
-Interval: Time between status checks.
+Host: IP address of the bridge
+Password: Leave blank if you dont use a login
+Interval: Time between status checks in seconds
 ```
 
-#### - Anel outlet
+#### - rademacher-rollershutter
 
-Control a single outlet of the Anel device.
+Control a single roller shutter connected to the bridge
 
+## Example
+![example](https://user-images.githubusercontent.com/10551698/135700284-e542398e-b9f2-4ffe-bd59-81c92b994c64.PNG)
 
-#### - Anel Io
+## Credits
 
-Control a single io of the Anel device.
-
-#### - Anel Sensors
-
-Receive the sensor states of the Anel device.
-
-
+Thanks to kapet for providing the information needed to write this module!
+https://kapet.de/archives/118
 
 License (MIT)
 -------------
