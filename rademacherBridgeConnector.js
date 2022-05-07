@@ -14,7 +14,7 @@ getSessionCookie = function(host, password) {
 			timeout: 5000
 		}, (err, res, data) => {
 			if (err) return reject(err);
-			if (res.statusCode != 200) return reject({statusCode: res.statusCode, error: data});
+			if (!res || res.statusCode != 200) return reject({statusCode: res ? res.statusCode : 0, error: data});
 			
 			let salt = data.password_salt;
 			let pwHash = crypto.SHA256(password).toString(crypto.enc.hex);
@@ -96,11 +96,11 @@ Bridge = class {
 					}).catch((err) => {
 						reject(err); //Connection error
 					});
-				} else if (res.statusCode == 200) {
+				} else if (res && res.statusCode == 200) {
 					resolve(data);
-				} else if (res.statusCode == 400) {
+				} else if (res && res.statusCode == 400) {
 					reject(data);
-				} else {
+				} else if (res) {
 					reject({statusCode: res.statusCode, error: data});
 				}
 			});
@@ -138,11 +138,11 @@ Bridge = class {
 					}).catch((err) => {
 						reject(err); //Connection error
 					});
-				} else if (res.statusCode == 200) {
+				} else if (res && res.statusCode == 200) {
 					resolve(data);
-				} else if (res.statusCode == 400) {
+				} else if (res && res.statusCode == 400) {
 					reject(data);
-				} else {
+				} else if (res) {
 					reject({statusCode: res.statusCode, error: data});
 				}
 			});
